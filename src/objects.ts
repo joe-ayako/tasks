@@ -32,7 +32,6 @@ export function makeBlankQuestion(
  * HINT: Look up the `trim` and `toLowerCase` functions.
  */
 export function isCorrect(question: Question, answer: string): boolean {
-    console.log("here");
     let a = question.expected.trim().toLowerCase();
     let b = answer.trim().toLowerCase();
 
@@ -46,7 +45,17 @@ export function isCorrect(question: Question, answer: string): boolean {
  * be exactly one of the options.
  */
 export function isValid(question: Question, answer: string): boolean {
-    return false;
+    let isValid: boolean = false;
+    if (question.type === "multiple_choice_question") {
+        question.options.map((option: string): void => {
+            if (answer === option) {
+                isValid = true;
+            }
+        });
+        return isValid;
+    } else {
+        return true;
+    }
 }
 
 /**
@@ -56,7 +65,7 @@ export function isValid(question: Question, answer: string): boolean {
  * name "My First Question" would become "9: My First Q".
  */
 export function toShortForm(question: Question): string {
-    return "";
+    return question.id + ": " + question.name.substring(0, 10);
 }
 
 /**

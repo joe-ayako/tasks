@@ -182,11 +182,11 @@ export function injectPositive(values: number[]): number[] {
 
     if (negativeFound) {
         arrayCopy.splice(position + 1, 0, sum);
-        console.log(arrayCopy);
+        //console.log(arrayCopy);
         return arrayCopy;
     } else {
         arrayCopy.push(sum);
-        console.log(arrayCopy);
+        //console.log(arrayCopy);
         return arrayCopy;
     }
 }

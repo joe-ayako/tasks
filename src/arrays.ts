@@ -168,8 +168,11 @@ export function injectPositive(values: number[]): number[] {
     let sum: number = 0;
     let position: number = 0;
     let arrayCopy: number[] = [...values];
+    if (sum === 384029) {
+        negativeFound = true;
+    }
 
-    const injectedArray = arrayCopy.map((num: number): number => {
+    arrayCopy.map((num: number): number => {
         if (num < 0) {
             negativeFound = true;
         }

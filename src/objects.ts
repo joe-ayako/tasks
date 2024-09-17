@@ -86,7 +86,23 @@ export function toShortForm(question: Question): string {
  * Check the unit tests for more examples of what this looks like!
  */
 export function toMarkdown(question: Question): string {
-    return "";
+    console.log("here");
+    if (question.type === "multiple_choice_question") {
+        return (
+            "# " +
+            question.name +
+            "\n" +
+            question.body +
+            "\n- " +
+            question.options[0] +
+            "\n- " +
+            question.options[1] +
+            "\n- " +
+            question.options[2]
+        );
+    } else {
+        return "# " + question.name + "\n" + question.body;
+    }
 }
 
 /**
@@ -94,7 +110,8 @@ export function toMarkdown(question: Question): string {
  * `newName`.
  */
 export function renameQuestion(question: Question, newName: string): Question {
-    return question;
+    let updatedQuestion = { ...question, name: newName };
+    return updatedQuestion;
 }
 
 /**
@@ -103,7 +120,13 @@ export function renameQuestion(question: Question, newName: string): Question {
  * published; if it was published, now it should be not published.
  */
 export function publishQuestion(question: Question): Question {
-    return question;
+    let updatedQuestion = { ...question };
+    updatedQuestion.published =
+        updatedQuestion.published ?
+            (updatedQuestion.published = false)
+        :   (updatedQuestion.published = true);
+
+    return updatedQuestion;
 }
 
 /**

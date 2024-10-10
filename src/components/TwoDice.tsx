@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "react-bootstrap";
 
 /**
@@ -12,5 +12,49 @@ export function d6(): number {
 }
 
 export function TwoDice(): React.JSX.Element {
-    return <div>Two Dice</div>;
+    const [leftDie, setLeftDie] = useState<number>(2);
+    const [rightDie, setRightDie] = useState<number>(3);
+    const [gameResult, setGameResult] = useState<string>("");
+
+    useEffect(() => {
+        if (leftDie === 1 && rightDie === 1) {
+            setGameResult("You Lose! (Snake Eyes)");
+        } else if (leftDie === rightDie) {
+            setGameResult("You Win! Matching dice.");
+        } else {
+            setGameResult("");
+        }
+    }, [leftDie, rightDie]);
+
+    return (
+        <div>
+            <div>
+                <span data-testid="left-die">Left Die: {leftDie}</span>
+                <span data-testid="right-die">Right Die: {rightDie}</span>
+            </div>
+
+            <div>
+                <Button
+                    aria-label="Roll Left"
+                    onClick={() => {
+                        const newValue = d6();
+                        setLeftDie(newValue);
+                    }}
+                >
+                    Roll Left
+                </Button>
+                <Button
+                    aria-label="Roll Right"
+                    onClick={() => {
+                        const newValue = d6();
+                        setRightDie(newValue);
+                    }}
+                >
+                    Roll Right
+                </Button>
+            </div>
+
+            {gameResult && <p>{gameResult}</p>}
+        </div>
+    );
 }

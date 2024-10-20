@@ -8,11 +8,7 @@ import { duplicateQuestion } from "./objects";
  * that are `published`.
  */
 export function getPublishedQuestions(questions: Question[]): Question[] {
-    const newArray: Question[] = questions.filter(
-        (question) => question.published,
-    );
-
-    return newArray;
+    return questions.filter((question) => question.published);
 }
 
 /**
@@ -38,8 +34,7 @@ export function findQuestion(
     questions: Question[],
     id: number,
 ): Question | null {
-    const question = questions.find((question) => question.id === id);
-    return question || null;
+    return questions.find((question) => question.id === id) || null;
 }
 
 /**
@@ -93,17 +88,10 @@ id,name,options,points,published
  */
 export function toCSV(questions: Question[]): string {
     const header = "id,name,options,points,published";
-
     const rows = questions.map((question) => {
-        const id = question.id;
-        const name = question.name;
-        const optionsCount = question.options ? question.options.length : 0;
-        const points = question.points;
-        const published = question.published ? "true" : "false";
-
-        return `${id},${name},${optionsCount},${points},${published}`;
+        const optionsCount = question.options.length;
+        return `${question.id},${question.name},${optionsCount},${question.points},${question.published}`;
     });
-
     return [header, ...rows].join("\n");
 }
 
@@ -154,10 +142,8 @@ export function addNewQuestion(
     name: string,
     type: QuestionType,
 ): Question[] {
-    const newQuestions = [...questions];
     const blankQuestion = makeBlankQuestion(id, name, type);
-    newQuestions.push(blankQuestion);
-    return newQuestions;
+    return [...questions, blankQuestion];
 }
 
 /***
@@ -212,7 +198,6 @@ export function changeQuestionTypeById(
  * Remember, if a function starts getting too complicated, think about how a helper function
  * can make it simpler! Break down complicated tasks into little pieces.
  */
-// Helper function to update options
 export function updateOptions(
     options: string[],
     targetOptionIndex: number,
@@ -220,11 +205,10 @@ export function updateOptions(
 ): string[] {
     if (targetOptionIndex === -1) {
         return [...options, newOption];
-    } else {
-        const updatedOptions = [...options];
-        updatedOptions[targetOptionIndex] = newOption;
-        return updatedOptions;
     }
+    const updatedOptions = [...options];
+    updatedOptions[targetOptionIndex] = newOption;
+    return updatedOptions;
 }
 
 export function editOption(
@@ -238,7 +222,7 @@ export function editOption(
             return {
                 ...question,
                 options: updateOptions(
-                    question.options || [],
+                    question.options,
                     targetOptionIndex,
                     newOption,
                 ),

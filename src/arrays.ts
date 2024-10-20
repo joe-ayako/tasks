@@ -5,13 +5,12 @@
  * the number twice.
  */
 export function bookEndList(numbers: number[]): number[] {
-    let firstLast: number[] = [];
-    if (numbers.length == 0) {
-        return firstLast;
-    } else {
-        firstLast = [numbers[0], numbers[numbers.length - 1]];
-        return firstLast;
+    if (numbers.length === 0) {
+        return [];
     }
+    return numbers.length === 1 ?
+            [numbers[0], numbers[0]]
+        :   [numbers[0], numbers[numbers.length - 1]];
 }
 
 /**
@@ -19,8 +18,7 @@ export function bookEndList(numbers: number[]): number[] {
  * number has been tripled (multiplied by 3).
  */
 export function tripleNumbers(numbers: number[]): number[] {
-    let tripled = numbers.map((num: number): number => num * 3);
-    return tripled;
+    return numbers.map((num: number): number => num * 3);
 }
 
 /**
@@ -28,15 +26,7 @@ export function tripleNumbers(numbers: number[]): number[] {
  * the number cannot be parsed as an integer, convert it to 0 instead.
  */
 export function stringsToIntegers(numbers: string[]): number[] {
-    let dollars = numbers.map((num: string): number => {
-        if (isNaN(parseInt(num))) {
-            return 0;
-        } else {
-            return parseInt(num);
-        }
-    });
-
-    return dollars;
+    return numbers.map((num: string): number => parseInt(num) || 0);
 }
 
 /**
@@ -45,25 +35,11 @@ export function stringsToIntegers(numbers: string[]): number[] {
  * those should be removed. If the result cannot be parsed as an integer,
  * convert it to 0 instead.
  */
-// Remember, you can write functions as lambdas too! They work exactly the same.
 export const removeDollars = (amounts: string[]): number[] => {
-    let current: string = "";
-
-    let noSigns = amounts.map((amount: string): number => {
-        if (amount[0] === "$") {
-            current = amount.substring(1, amount.length);
-        } else {
-            current = amount;
-        }
-
-        if (isNaN(parseInt(current))) {
-            return 0;
-        } else {
-            return parseInt(current);
-        }
+    return amounts.map((amount: string): number => {
+        const current = amount.startsWith("$") ? amount.slice(1) : amount;
+        return parseInt(current) || 0;
     });
-
-    return noSigns;
 };
 
 /**
@@ -72,19 +48,11 @@ export const removeDollars = (amounts: string[]): number[] => {
  * in question marks ("?").
  */
 export const shoutIfExclaiming = (messages: string[]): string[] => {
-    const noQuestions = messages.filter(
-        (message: string): boolean => message[message.length - 1] !== "?",
-    );
-
-    const capitalised = noQuestions.map((message: string): string => {
-        if (message[message.length - 1] === "!") {
-            return message.toUpperCase();
-        } else {
-            return message;
-        }
-    });
-
-    return capitalised;
+    return messages
+        .filter((message: string): boolean => !message.endsWith("?"))
+        .map((message: string): string =>
+            message.endsWith("!") ? message.toUpperCase() : message,
+        );
 };
 
 /**
@@ -92,17 +60,9 @@ export const shoutIfExclaiming = (messages: string[]): string[] => {
  * 4 letters long.
  */
 export function countShortWords(words: string[]): number {
-    let count: number = 0;
-    words.map((word: string): string => {
-        if (word.length < 4) {
-            count++;
-            return word;
-        } else {
-            return word;
-        }
-    });
-
-    return count;
+    return words.reduce((count: number, word: string): number => {
+        return word.length < 4 ? count + 1 : count;
+    }, 0);
 }
 
 /**
@@ -111,20 +71,13 @@ export function countShortWords(words: string[]): number {
  * then return true.
  */
 export function allRGB(colors: string[]): boolean {
-    let allRGB: boolean = true;
-    if (colors.length === 0) {
-        return allRGB;
-    } else {
-        colors.map((color: string): string => {
-            if (color !== "red" && color !== "green" && color !== "blue") {
-                allRGB = false;
-                return color;
-            } else {
-                return color;
-            }
-        });
-        return allRGB;
-    }
+    return (
+        colors.length === 0 ||
+        colors.every(
+            (color: string): boolean =>
+                color === "red" || color === "green" || color === "blue",
+        )
+    );
 }
 
 /**
@@ -135,22 +88,8 @@ export function allRGB(colors: string[]): boolean {
  * And the array [] would become "0=0".
  */
 export function makeMath(addends: number[]): string {
-    let equation: string = "";
-    let sum: number = 0;
-    addends.map((num: number): number => {
-        sum = sum + num;
-        equation = equation + num + "+";
-        return num;
-    });
-
-    if (sum > 0) {
-        equation = sum + "=" + equation.substring(0, equation.length - 1);
-    } else {
-        equation = sum + "=" + sum;
-    }
-
-    //console.log(equation);
-
+    const sum = addends.reduce((acc, num) => acc + num, 0);
+    const equation = sum > 0 ? `${sum}=${addends.join("+")}` : "0=0";
     return equation;
 }
 
@@ -164,29 +103,15 @@ export function makeMath(addends: number[]): string {
  * And the array [1, 9, 7] would become [1, 9, 7, 17]
  */
 export function injectPositive(values: number[]): number[] {
-    let negativeFound: boolean = false;
+    const arrayCopy: number[] = [...values];
     let sum: number = 0;
-    let position: number = 0;
-    let arrayCopy: number[] = [...values];
-
-    const injectedArray = arrayCopy.map((num: number): number => {
-        if (num < 0) {
-            negativeFound = true;
+    for (let i = 0; i < arrayCopy.length; i++) {
+        if (arrayCopy[i] < 0) {
+            arrayCopy.splice(i + 1, 0, sum);
+            return arrayCopy;
         }
-        if (!negativeFound) {
-            sum = sum + num;
-            position++;
-        }
-        return num;
-    });
-
-    if (negativeFound) {
-        arrayCopy.splice(position + 1, 0, sum);
-        console.log(arrayCopy);
-        return arrayCopy;
-    } else {
-        arrayCopy.push(sum);
-        console.log(arrayCopy);
-        return arrayCopy;
+        sum += arrayCopy[i];
     }
+    arrayCopy.push(sum);
+    return arrayCopy;
 }
